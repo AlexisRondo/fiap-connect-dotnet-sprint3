@@ -16,7 +16,7 @@ Sistema de formação de grupos acadêmicos para o Challenge Oracle FIAP.
 Esta sprint evoluiu a API REST da Sprint 2 adicionando três camadas:
 
 - **Monitoramento e Observabilidade** — Health Checks, Logging com Serilog e Tracing com OpenTelemetry
-- **Testes Automatizados** — Testes unitários e de integração com xUnit seguindo o padrão AAA
+- **Testes Automatizados** — Testes unitários e de integração com xUnit seguindo o padrão AAA, organizados por camada com uso de Fixtures e Collection Fixtures
 - **README atualizado** com documentação dos endpoints e instruções de execução
 
 ---
@@ -174,23 +174,29 @@ FiapConnect.Tests/
 │   ├── UsuarioControllerTests.cs   (4 testes)
 │   └── GrupoControllerTests.cs     (3 testes)
 └── Integration/
-    └── ApiIntegrationTests.cs      (3 testes)
+    ├── WebAppFixture.cs
+    ├── ApiTestCollection.cs
+    └── ApiIntegrationTests.cs      (6 testes)
+
+Total: 13 testes
 ```
+
+Os testes de integração utilizam **Collection Fixture** (`ApiTestCollection`) para compartilhar uma única instância da aplicação em memória entre todos os cenários, e **WebAppFixture** para gerenciar o ciclo de vida do `WebApplicationFactory`.
 
 ### Como executar os testes
 
 ```bash
 # Executar todos os testes
-dotnet test
+dotnet test FiapConnectSprint2.sln
 
 # Executar com detalhes
-dotnet test --verbosity normal
+dotnet test FiapConnectSprint2.sln --verbosity normal
 
 # Executar apenas testes unitários
-dotnet test --filter "FullyQualifiedName~Unit"
+dotnet test FiapConnectSprint2.sln --filter "FullyQualifiedName~Unit"
 
 # Executar apenas testes de integração
-dotnet test --filter "FullyQualifiedName~Integration"
+dotnet test FiapConnectSprint2.sln --filter "FullyQualifiedName~Integration"
 ```
 
 ### Padrão AAA
@@ -247,6 +253,8 @@ FiapConnect.Tests/
 │   ├── UsuarioControllerTests.cs
 │   └── GrupoControllerTests.cs
 ├── Integration/
+│   ├── WebAppFixture.cs
+│   ├── ApiTestCollection.cs
 │   └── ApiIntegrationTests.cs
 └── FiapConnect.Tests.csproj
 ```
